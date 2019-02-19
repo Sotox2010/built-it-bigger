@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".JokeDisplayerActivity">
+
+    <android.support.v7.widget.Toolbar
+        style="@style/Widget.AppCompat.Toolbar"
+        android:id="@+id/toolbar"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"/>
+
+    <TextView
+        android:id="@+id/jokeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_size_joke_view"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:lineSpacingMultiplier="1.1"
+        app:fontFamily="@font/source_sans_pro"
+        tools:text="A man tells his doctor, “Doc, help me. I’m addicted to Twitter!”\n\nThe doctor replies, “Sorry, I don’t follow you …”"/>
+
+</LinearLayout>
