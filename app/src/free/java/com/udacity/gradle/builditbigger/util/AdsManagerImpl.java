@@ -1,6 +1,8 @@
 package com.udacity.gradle.builditbigger.util;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -8,12 +10,22 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.udacity.gradle.builditbigger.OnAdClosedListener;
 import com.udacity.gradle.builditbigger.R;
 
 public class AdsManagerImpl extends AdListener implements AdsManager {
 
-    public AdsManagerImpl() {
+    private InterstitialAd mInterstitialAd;
 
+    private OnAdClosedListener mAdClosedListener;
+
+    public AdsManagerImpl(@NonNull Context context, @NonNull OnAdClosedListener adClosedListener) {
+        mInterstitialAd = new InterstitialAd(context);
+        mInterstitialAd.setAdUnitId(context.getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdListener(this);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mAdClosedListener = adClosedListener;
     }
 
     @Override
@@ -39,7 +51,20 @@ public class AdsManagerImpl extends AdListener implements AdsManager {
     }
 
     @Override
+    public void showInterstitialAd() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+            mAdClosedListener.onAdClosed();
+        }
+    }
+
+    @Override
     public void onAdClosed() {
         super.onAdClosed();
+        // Load the next interstitial.
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mAdClosedListener.onAdClosed();
     }
 }

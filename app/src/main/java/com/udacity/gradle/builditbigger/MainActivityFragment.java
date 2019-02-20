@@ -14,17 +14,19 @@ import com.jesussoto.android.jokedisplayer.JokeDisplayerActivity;
 import com.udacity.gradle.builditbigger.util.AdsManager;
 import com.udacity.gradle.builditbigger.util.AdsManagerImpl;
 
-
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements JokeCallbacks {
+public class MainActivityFragment extends Fragment implements
+        JokeCallbacks, OnAdClosedListener {
 
     private AdsManager mAdsManager;
 
     private View mProgressView;
 
     private Button mTellJokeButton;
+
+    private String mLoadedJoke;
 
     public MainActivityFragment() {
 
@@ -35,7 +37,7 @@ public class MainActivityFragment extends Fragment implements JokeCallbacks {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mAdsManager = new AdsManagerImpl();
+        mAdsManager = new AdsManagerImpl(requireContext(), this);
         mAdsManager.setupAdView((FrameLayout) root.findViewById(R.id.adViewContainer));
 
         mProgressView = root.findViewById(R.id.progress_view);
@@ -58,14 +60,20 @@ public class MainActivityFragment extends Fragment implements JokeCallbacks {
 
     @Override
     public void onJokeLoaded(String joke) {
+        mLoadedJoke = joke;
         setProgress(false);
-        JokeDisplayerActivity.start(getActivity(), joke);
+        mAdsManager.showInterstitialAd();
     }
 
     @Override
     public void onJokeLoadError(Exception ex) {
-        //setProgress(false);
+        setProgress(false);
         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onAdClosed() {
+        JokeDisplayerActivity.start(getActivity(), mLoadedJoke);
     }
 
     private void setProgress(boolean inProgress) {
